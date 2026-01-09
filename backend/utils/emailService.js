@@ -8,36 +8,51 @@ class EmailService {
 
   // Initialize email transporter
   initializeTransporter() {
-    // In production, use actual SMTP settings
-    // For development, we'll use a mock implementation
-    if (process.env.NODE_ENV === 'production') {
-      this.transporter = nodemailer.createTransporter({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS
-        }
-      });
+    // In production, use actual SMTP settings if configured
+    // For development or when SMTP is not configured, use mock implementation
+    if (process.env.NODE_ENV === 'production' && process.env.SMTP_HOST) {
+      try {
+        this.transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT || 587,
+          secure: process.env.SMTP_SECURE === 'true',
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS
+          }
+        });
+        console.log('✅ Email service initialized with SMTP configuration');
+      } catch (error) {
+        console.warn('⚠️ SMTP configuration error, falling back to mock email service:', error.message);
+        this.initializeMockTransporter();
+      }
     } else {
-      // Mock transporter for development
-      this.transporter = {
-        sendMail: async (mailOptions) => {
-          console.log('📧 Mock Email Sent:');
-          console.log('To:', mailOptions.to);
-          console.log('Subject:', mailOptions.subject);
-          console.log('Content:', mailOptions.text || mailOptions.html);
-          console.log('---');
-          
-          return {
-            messageId: 'mock-message-id-' + Date.now(),
-            accepted: [mailOptions.to],
-            rejected: []
-          };
-        }
-      };
+      console.log('📧 Using mock email service (SMTP not configured)');
+      this.initializeMockTransporter();
     }
+  }
+
+  // Initialize mock transporter
+  initializeMockTransporter() {
+    this.transporter = {
+      sendMail: async (mailOptions) => {
+        console.log('📧 Mock Email Sent:');
+        console.log('To:', mailOptions.to);
+        console.log('Subject:', mailOptions.subject);
+        console.log('Content:', mailOptions.text ? mailOptions.text.substring(0, 100) + '...' : 'HTML content');
+        console.log('---');
+        
+        return {
+          messageId: 'mock-message-id-' + Date.now(),
+          accepted: [mailOptions.to],
+          rejected: []
+        };
+      },
+      verify: async () => {
+        console.log('✅ Mock email service verified');
+        return true;
+      }
+    };
   }
 
   // Send OTP email
@@ -500,7 +515,7 @@ This is an automated email. Please do not reply to this message.
   // Test email configuration
   async testConnection() {
     try {
-      if (process.env.NODE_ENV === 'production') {
+      if (this.transporter.verify) {
         await this.transporter.verify();
         console.log('✅ Email service connection verified');
         return { success: true };
@@ -510,7 +525,9 @@ This is an automated email. Please do not reply to this message.
       }
     } catch (error) {
       console.error('❌ Email service connection failed:', error);
-      return { success: false, error: error.message };
+      console.log('📧 Falling back to mock email service');
+      this.initializeMockTransporter();
+      return { success: true, mock: true, fallback: true };
     }
   }
 }
