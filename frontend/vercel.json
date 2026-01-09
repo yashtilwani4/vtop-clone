@@ -51,17 +51,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "REACT_APP_API_URL": "@react_app_api_url",
-    "REACT_APP_APP_NAME": "@react_app_app_name",
-    "REACT_APP_VERSION": "@react_app_version"
-  },
-  "build": {
-    "env": {
-      "REACT_APP_API_URL": "@react_app_api_url",
-      "REACT_APP_APP_NAME": "@react_app_app_name",
-      "REACT_APP_VERSION": "@react_app_version"
-    }
-  }
+  ]
 }
