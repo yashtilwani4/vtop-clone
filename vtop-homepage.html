@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIT Bhopal - VTOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .campus-name {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .header-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .main-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Role Cards Section */
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .role-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .role-card.student::before {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+        }
+
+        .role-card.employee::before {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+        }
+
+        .role-card.parent::before {
+            background: linear-gradient(90deg, #27ae60, #229954);
+        }
+
+        .role-card.alumni::before {
+            background: linear-gradient(90deg, #1abc9c, #16a085);
+        }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .student .card-icon {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .employee .card-icon {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .parent .card-icon {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .alumni .card-icon {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+        }
+
+        .card-info {
+            flex: 1;
+        }
+
+        .role-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .role-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .login-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+        }
+
+        .login-button:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .student .login-button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .employee .login-button {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .parent .login-button {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .alumni .login-button {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .campus-name {
+                order: 2;
+            }
+
+            .header-title {
+                order: 1;
+            }
+
+            .main-title {
+                font-size: 24px;
+            }
+
+            .role-cards {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .main-content {
+                padding: 40px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .role-card {
+                padding: 20px;
+            }
+
+            .main-title {
+                font-size: 20px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+            }
+        }
+
+        /* Animation */
+        .role-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .role-card:nth-child(1) { animation-delay: 0.1s; }
+        .role-card:nth-child(2) { animation-delay: 0.2s; }
+        .role-card:nth-child(3) { animation-delay: 0.3s; }
+        .role-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-top">
+            <div class="campus-name">VIT (Bhopal Campus)</div>
+            <div class="header-title">
+                <h1 class="main-title">VTOP translates to "VIT on TOP"</h1>
+                <p class="subtitle">
+                    A digital initiative by the institute facilitating Faculty, Staff, Students, Parents and 
+                    Alumni to access and process Academics, Research, Supporting services at one common platform.
+                </p>
+            </div>
+            <div></div> <!-- Spacer for flex layout -->
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Role Selection Cards -->
+            <div class="role-cards">
+                <!-- Student Card -->
+                <div class="role-card student" onclick="handleRoleClick('student')">
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="role-name">Student</h3>
+                            <p class="role-description">Access academic records, course registration, attendance, and student services</p>
+                            <button class="login-button">
+                                Login <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employee Card -->
+                <div class="role-card employee" onclick="handleRoleClick('employee')">
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="role-name">Employee</h3>
+                            <p class="role-description">Faculty and staff portal for academic management and administrative tasks</p>
+                            <button class="login-button">
+                                Login <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parent Card -->
+                <div class="role-card parent" onclick="handleRoleClick('parent')">
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="role-name">Parent</h3>
+                            <p class="role-description">Monitor your child's academic progress, attendance, and fee status</p>
+                            <button class="login-button">
+                                Login <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alumni Card -->
+                <div class="role-card alumni" onclick="handleRoleClick('alumni')">
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="role-name">Alumni</h3>
+                            <p class="role-description">Connect with the alumni network and access exclusive services</p>
+                            <button class="login-button">
+                                Login <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">Copyright © 2026 Software Development Cell, VIT, Bhopal-466 114.</p>
+    </footer>
+
+    <script>
+        function handleRoleClick(role) {
+            // Add click animation
+            event.currentTarget.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                event.currentTarget.style.transform = '';
+            }, 150);
+
+            // Simulate navigation (replace with actual navigation logic)
+            setTimeout(() => {
+                alert(`Redirecting to ${role.charAt(0).toUpperCase() + role.slice(1)} login page...`);
+                // In a real application, you would navigate to the login page:
+                // window.location.href = `/login?role=${role}`;
+            }, 200);
+        }
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

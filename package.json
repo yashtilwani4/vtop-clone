@@ -1,0 +1,50 @@
+{
+  "name": "vtop-academic-portal",
+  "version": "1.0.0",
+  "description": "VTOP - VIT on TOP Academic Portal for Students, Faculty and Staff",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm start",
+    "build": "cd frontend && npm run build",
+    "install-deps": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && npm run seed",
+    "test": "cd backend && npm test && cd ../frontend && npm test",
+    "start": "cd backend && npm start",
+    "deploy": "./deploy.sh production",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "backup": "cd backend && npm run backup",
+    "restore": "cd backend && npm run restore"
+  },
+  "keywords": [
+    "academic",
+    "portal",
+    "education",
+    "student",
+    "faculty",
+    "management",
+    "vtop",
+    "vit"
+  ],
+  "author": "VIT Bhopal",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/vtop-academic-portal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/vtop-academic-portal/issues"
+  },
+  "homepage": "https://github.com/yourusername/vtop-academic-portal#readme",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
