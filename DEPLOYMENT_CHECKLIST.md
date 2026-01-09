@@ -21,6 +21,11 @@
 - [ ] `render.yaml` exists in project root
 - [ ] `frontend/.env.production` configured
 - [ ] `backend/.env.production` configured
+- [ ] `frontend/public/` directory has all required files:
+  - [ ] `index.html` (main HTML template)
+  - [ ] `favicon.svg` (proper favicon file)
+  - [ ] `manifest.json` (PWA manifest)
+  - [ ] `robots.txt` (SEO robots file)
 
 ## Backend Deployment (Render)
 
@@ -70,6 +75,7 @@
 - [ ] Project deployed successfully
 - [ ] Frontend URL noted
 - [ ] App loads without errors
+- [ ] Build process completed without errors (only ESLint warnings acceptable)
 
 ## Post-Deployment Configuration
 
