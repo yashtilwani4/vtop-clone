@@ -44,7 +44,14 @@ export const apiRequestJSON = async (endpoint, options = {}) => {
   const data = await response.json();
   
   if (!response.ok) {
-    throw new Error(data.message || 'API request failed');
+    // Create axios-like error for compatibility
+    const error = new Error(data.message || 'API request failed');
+    error.response = {
+      data,
+      status: response.status,
+      statusText: response.statusText
+    };
+    throw error;
   }
   
   return data;
@@ -78,12 +85,33 @@ export const apiDelete = (endpoint) => apiRequestJSON(endpoint, {
   method: 'DELETE'
 });
 
-export default {
-  apiRequest,
-  apiRequestJSON,
-  apiGet,
-  apiPost,
-  apiPut,
-  apiDelete,
-  API_BASE_URL
+// Axios-like API object for compatibility with existing AuthContext
+const api = {
+  defaults: {
+    headers: {
+      common: {}
+    }
+  },
+  
+  get: async (endpoint) => {
+    const data = await apiGet(endpoint);
+    return { data };
+  },
+  
+  post: async (endpoint, body) => {
+    const data = await apiPost(endpoint, body);
+    return { data };
+  },
+  
+  put: async (endpoint, body) => {
+    const data = await apiPut(endpoint, body);
+    return { data };
+  },
+  
+  delete: async (endpoint) => {
+    const data = await apiDelete(endpoint);
+    return { data };
+  }
 };
+
+export default api;
