@@ -5,29 +5,22 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNotification } from '../contexts/NotificationContext';
 import {
   AcademicCapIcon,
-  ClipboardDocumentCheckIcon,
   ChartBarIcon,
   CalendarDaysIcon,
   SpeakerWaveIcon,
   BookOpenIcon,
-  ClockIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
   ArrowRightIcon,
   BellIcon,
-  UserGroupIcon,
   DocumentArrowUpIcon,
   PlusIcon,
-  EyeIcon,
   PencilSquareIcon,
-  UserCircleIcon,
   TrophyIcon
 } from '@heroicons/react/24/outline';
-import { formatTime, getAttendanceColor, formatDate } from '../utils/helpers';
+import { formatDate } from '../utils/helpers';
 
 const DashboardPage = () => {
   const { user } = useAuth();
-  const { showSuccess, showInfo } = useNotification();
+  const { showInfo } = useNotification();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   // Update time every minute
