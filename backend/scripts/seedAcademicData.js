@@ -71,13 +71,13 @@ const seedAcademicData = async () => {
 
     // Interim Semester Courses (Semester 1)
     const interimCourses = [
-      { courseCode: 'MAT1001', courseName: 'Calculus for Engineers', credits: 4, semester: 1 },
-      { courseCode: 'PHY1001', courseName: 'Engineering Physics', credits: 3, semester: 1 },
-      { courseCode: 'CHE1001', courseName: 'Engineering Chemistry', credits: 3, semester: 1 },
-      { courseCode: 'ENG1001', courseName: 'Technical English', credits: 2, semester: 1 },
-      { courseCode: 'CSE1001', courseName: 'Programming for Problem Solving', credits: 4, semester: 1 },
-      { courseCode: 'EEE1001', courseName: 'Basic Electrical Engineering', credits: 3, semester: 1 },
-      { courseCode: 'MEC1001', courseName: 'Engineering Graphics', credits: 2, semester: 1 }
+      { courseCode: 'CHY1007', courseName: 'Forensic Chemistry and Applications', credits: 4, semester: 1 },
+      { courseCode: 'CSA2001', courseName: 'Fundamentals in AI & ML', credits: 4, semester: 1 },
+      { courseCode: 'CSE0001', courseName: 'Digital Literacy', credits: 1, semester: 1 },
+      { courseCode: 'EEE1001', courseName: 'Electric Circuits and Systems', credits: 4, semester: 1 },
+      { courseCode: 'ENG1004', courseName: 'Effective Technical Communication', credits: 2, semester: 1 },
+      { courseCode: 'MAT1003', courseName: 'Calculus', credits: 4, semester: 1 },
+      { courseCode: 'UHV0001', courseName: 'Universal Human Values - I', credits: 1, semester: 1 }
     ];
 
     // Winter Semester Courses (Semester 2)
@@ -124,13 +124,13 @@ const seedAcademicData = async () => {
 
     // Interim Semester Results (Semester 1)
     const interimResults = [
-      { courseCode: 'MAT1001', grade: 'A', gradePoints: 9, marks: 85 },
-      { courseCode: 'PHY1001', grade: 'B', gradePoints: 8, marks: 78 },
-      { courseCode: 'CHE1001', grade: 'A', gradePoints: 9, marks: 82 },
-      { courseCode: 'ENG1001', grade: 'S', gradePoints: 10, marks: 92 },
-      { courseCode: 'CSE1001', grade: 'A', gradePoints: 9, marks: 88 },
-      { courseCode: 'EEE1001', grade: 'B', gradePoints: 8, marks: 75 },
-      { courseCode: 'MEC1001', grade: 'C', gradePoints: 7, marks: 68 }
+      { courseCode: 'CHY1007', grade: 'C', gradePoints: 7, marks: 68 },
+      { courseCode: 'CSA2001', grade: 'D', gradePoints: 6, marks: 74 },
+      { courseCode: 'CSE0001', grade: 'P', gradePoints: 0, marks: 93 }, // Pass grade, no points
+      { courseCode: 'EEE1001', grade: 'D', gradePoints: 6, marks: 65 },
+      { courseCode: 'ENG1004', grade: 'C', gradePoints: 7, marks: 75 },
+      { courseCode: 'MAT1003', grade: 'E', gradePoints: 5, marks: 52 },
+      { courseCode: 'UHV0001', grade: 'P', gradePoints: 0, marks: 91 } // Pass grade, no points
     ];
 
     // Winter Semester Results (Semester 2)

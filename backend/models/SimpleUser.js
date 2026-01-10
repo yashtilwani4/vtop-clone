@@ -66,6 +66,114 @@ const userSchema = new mongoose.Schema({
     }
   },
   
+  // Additional personal information fields
+  firstName: {
+    type: String,
+    trim: true,
+    maxlength: [50, 'First name cannot exceed 50 characters']
+  },
+  
+  middleName: {
+    type: String,
+    trim: true,
+    maxlength: [50, 'Middle name cannot exceed 50 characters']
+  },
+  
+  lastName: {
+    type: String,
+    trim: true,
+    maxlength: [50, 'Last name cannot exceed 50 characters']
+  },
+  
+  phone: {
+    type: String,
+    trim: true,
+    match: [
+      /^(\+91|91)?[6-9]\d{9}$/,
+      'Please provide a valid Indian phone number'
+    ]
+  },
+  
+  dateOfBirth: {
+    type: Date,
+    validate: {
+      validator: function(v) {
+        if (!v) return true; // Optional field
+        const today = new Date();
+        const age = today.getFullYear() - v.getFullYear();
+        return age >= 16 && age <= 100; // Reasonable age range
+      },
+      message: 'Date of birth must indicate age between 16 and 100 years'
+    }
+  },
+  
+  gender: {
+    type: String,
+    enum: {
+      values: ['Male', 'Female', 'Other', 'Prefer not to say'],
+      message: 'Gender must be Male, Female, Other, or Prefer not to say'
+    }
+  },
+  
+  // Academic information fields
+  department: {
+    type: String,
+    trim: true,
+    maxlength: [200, 'Department name cannot exceed 200 characters']
+  },
+  
+  program: {
+    type: String,
+    trim: true,
+    maxlength: [100, 'Program name cannot exceed 100 characters']
+  },
+  
+  batch: {
+    type: String,
+    trim: true,
+    match: [
+      /^20\d{2}$/,
+      'Batch must be a 4-digit year (e.g., 2024)'
+    ]
+  },
+  
+  semester: {
+    type: Number,
+    min: [1, 'Semester must be at least 1'],
+    max: [8, 'Semester cannot exceed 8']
+  },
+  
+  academicYear: {
+    type: String,
+    trim: true,
+    match: [
+      /^20\d{2}-\d{2}$/,
+      'Academic year must be in format YYYY-YY (e.g., 2024-25)'
+    ]
+  },
+  
+  // Profile completion status
+  profileCompleted: {
+    type: Boolean,
+    default: false
+  },
+  
+  // Account status fields
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  
+  lastUpdated: {
+    type: Date,
+    default: Date.now
+  },
+  
   // Created at field (automatically managed by timestamps)
   createdAt: {
     type: Date,

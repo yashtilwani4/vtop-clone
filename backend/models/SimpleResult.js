@@ -189,7 +189,7 @@ resultSchema.statics.calculateCGPA = async function(studentId, academicYear = nu
   let coursesCompleted = 0;
   
   results.forEach(result => {
-    if (result.isPassed) {
+    if (result.isPassed && result.grade !== 'P') { // Exclude P grades from CGPA calculation
       const credits = result.courseId.credits;
       totalGradePoints += result.gradePoints * credits;
       totalCredits += credits;
@@ -231,6 +231,7 @@ resultSchema.statics.getSemesterSummary = async function(studentId, academicYear
   
   let totalGradePoints = 0;
   let totalCredits = 0;
+  let totalCreditsForGPA = 0; // Credits that count towards GPA (exclude P grades)
   let passedCourses = 0;
   
   results.forEach(result => {
@@ -238,12 +239,15 @@ resultSchema.statics.getSemesterSummary = async function(studentId, academicYear
     totalCredits += credits;
     
     if (result.isPassed) {
-      totalGradePoints += result.gradePoints * credits;
       passedCourses++;
+      if (result.grade !== 'P') { // Exclude P grades from GPA calculation
+        totalGradePoints += result.gradePoints * credits;
+        totalCreditsForGPA += credits;
+      }
     }
   });
   
-  const sgpa = totalCredits > 0 ? (totalGradePoints / totalCredits).toFixed(2) : 0;
+  const sgpa = totalCreditsForGPA > 0 ? (totalGradePoints / totalCreditsForGPA).toFixed(2) : 0;
   
   return {
     results: results.map(result => ({
