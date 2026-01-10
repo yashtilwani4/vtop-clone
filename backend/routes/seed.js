@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-// Import all the seed scripts
-const seedData = require('../scripts/seedData');
+// Import the academic data seed script
+const seedAcademicData = require('../scripts/seedAcademicData');
 
-// Temporary endpoint to seed production database
+// Temporary endpoint to seed production database with academic data only
 router.post('/seed-production', async (req, res) => {
   try {
     console.log('🌱 Starting production database seeding...');
@@ -17,15 +17,16 @@ router.post('/seed-production', async (req, res) => {
       });
     }
     
-    // Run the seed script
-    await seedData();
+    // Run the academic data seed script
+    const result = await seedAcademicData();
     
     console.log('✅ Production database seeded successfully');
     
     res.json({
       success: true,
-      message: 'Production database seeded successfully',
-      timestamp: new Date().toISOString()
+      message: 'Production database seeded successfully with academic data',
+      timestamp: new Date().toISOString(),
+      data: result.data
     });
     
   } catch (error) {
@@ -34,7 +35,8 @@ router.post('/seed-production', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to seed production database',
-      error: error.message
+      error: error.message,
+      timestamp: new Date().toISOString()
     });
   }
 });
