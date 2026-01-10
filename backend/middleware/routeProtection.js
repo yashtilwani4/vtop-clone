@@ -100,7 +100,9 @@ const applyRouteProtection = (app) => {
       '/simple-auth/verify-otp',
       '/simple-auth/reset-password',
       '/simple-auth/reset-status',
-      '/health'
+      '/health',
+      '/seed/seed-status',
+      '/seed/seed-production'
     ];
     
     console.log('Route protection check:', req.method, req.path);
