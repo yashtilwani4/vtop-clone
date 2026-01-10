@@ -22,6 +22,7 @@ const simpleAttendanceRoutes = require('./routes/simpleAttendance');
 const simpleResultRoutes = require('./routes/simpleResults');
 const simpleTimetableRoutes = require('./routes/simpleTimetable');
 const simpleNoticeRoutes = require('./routes/simpleNotices');
+const seedRoutes = require('./routes/seed');
 
 const app = express();
 
@@ -69,6 +70,9 @@ app.use('/api/simple-attendance', simpleAttendanceRoutes);
 app.use('/api/simple-results', simpleResultRoutes);
 app.use('/api/simple-timetable', simpleTimetableRoutes);
 app.use('/api/simple-notices', simpleNoticeRoutes);
+
+// Seed routes (production only)
+app.use('/api/seed', seedRoutes);
 
 // Authorization error handler
 app.use(authorizationErrorHandler);
