@@ -110,11 +110,11 @@ const seedAcademicData = async () => {
 
     for (const courseData of allCourses) {
       const course = new SimpleCourse({
-        ...courseData,
-        department: 'CSE',
+        courseCode: courseData.courseCode,
+        courseName: courseData.courseName,
+        credits: courseData.credits,
         facultyId: faculty._id,
-        academicYear: '2024-25',
-        isActive: true
+        studentsEnrolled: [student._id] // Enroll the student in all courses
       });
       const savedCourse = await course.save();
       createdCourses[courseData.courseCode] = savedCourse;
@@ -167,6 +167,12 @@ const seedAcademicData = async () => {
     for (const resultData of allResults) {
       const course = createdCourses[resultData.courseCode];
       if (course) {
+        // Calculate component marks based on total marks
+        const midtermMarks = Math.floor(resultData.marks * 0.4); // 40% for midterm
+        const assignmentMarks = Math.floor(resultData.marks * 0.2); // 20% for assignments
+        const quizMarks = Math.floor(resultData.marks * 0.2); // 20% for quiz
+        const endtermMarks = Math.floor(resultData.marks * 0.6); // 60% for endterm
+        
         const result = new SimpleResult({
           studentId: student._id,
           courseId: course._id,
@@ -175,22 +181,34 @@ const seedAcademicData = async () => {
           semester: resultData.semester,
           assessments: {
             internal: {
-              cat1: Math.floor(resultData.marks * 0.3),
-              cat2: Math.floor(resultData.marks * 0.35),
-              assignments: Math.floor(resultData.marks * 0.15),
-              total: Math.floor(resultData.marks * 0.8)
+              midterm: {
+                maxMarks: 50,
+                obtainedMarks: Math.min(midtermMarks, 50),
+                weightage: 20
+              },
+              assignments: {
+                maxMarks: 30,
+                obtainedMarks: Math.min(assignmentMarks, 30),
+                weightage: 10
+              },
+              quiz: {
+                maxMarks: 20,
+                obtainedMarks: Math.min(quizMarks, 20),
+                weightage: 10
+              }
             },
             external: {
-              endSemExam: Math.floor(resultData.marks * 0.2),
-              total: Math.floor(resultData.marks * 0.2)
+              endterm: {
+                maxMarks: 100,
+                obtainedMarks: Math.min(endtermMarks, 100),
+                weightage: 60
+              }
             }
           },
           totalMarks: resultData.marks,
           grade: resultData.grade,
           gradePoints: resultData.gradePoints,
-          credits: course.credits,
-          status: 'Published',
-          isActive: true
+          status: 'Published'
         });
         await result.save();
       }
