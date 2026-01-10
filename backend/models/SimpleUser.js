@@ -88,10 +88,16 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     trim: true,
-    match: [
-      /^(\+91|91)?[6-9]\d{9}$/,
-      'Please provide a valid Indian phone number'
-    ]
+    validate: {
+      validator: function(v) {
+        if (!v) return true; // Optional field
+        // Remove all spaces and special characters except +
+        const cleanPhone = v.replace(/[\s\-\(\)]/g, '');
+        // Check various Indian phone number formats
+        return /^(\+91|91)?[6-9]\d{9}$/.test(cleanPhone);
+      },
+      message: 'Please provide a valid Indian phone number (e.g., +91 9876543210 or 9876543210)'
+    }
   },
   
   dateOfBirth: {
