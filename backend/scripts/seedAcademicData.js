@@ -71,37 +71,37 @@ const seedAcademicData = async () => {
 
     // Interim Semester Courses (Semester 1)
     const interimCourses = [
-      { code: 'MAT1001', name: 'Calculus for Engineers', credits: 4, semester: 1 },
-      { code: 'PHY1001', name: 'Engineering Physics', credits: 3, semester: 1 },
-      { code: 'CHE1001', name: 'Engineering Chemistry', credits: 3, semester: 1 },
-      { code: 'ENG1001', name: 'Technical English', credits: 2, semester: 1 },
-      { code: 'CSE1001', name: 'Programming for Problem Solving', credits: 4, semester: 1 },
-      { code: 'EEE1001', name: 'Basic Electrical Engineering', credits: 3, semester: 1 },
-      { code: 'MEC1001', name: 'Engineering Graphics', credits: 2, semester: 1 }
+      { courseCode: 'MAT1001', courseName: 'Calculus for Engineers', credits: 4, semester: 1 },
+      { courseCode: 'PHY1001', courseName: 'Engineering Physics', credits: 3, semester: 1 },
+      { courseCode: 'CHE1001', courseName: 'Engineering Chemistry', credits: 3, semester: 1 },
+      { courseCode: 'ENG1001', courseName: 'Technical English', credits: 2, semester: 1 },
+      { courseCode: 'CSE1001', courseName: 'Programming for Problem Solving', credits: 4, semester: 1 },
+      { courseCode: 'EEE1001', courseName: 'Basic Electrical Engineering', credits: 3, semester: 1 },
+      { courseCode: 'MEC1001', courseName: 'Engineering Graphics', credits: 2, semester: 1 }
     ];
 
     // Winter Semester Courses (Semester 2)
     const winterCourses = [
-      { code: 'MAT2001', name: 'Linear Algebra and Calculus', credits: 4, semester: 2 },
-      { code: 'PHY2001', name: 'Engineering Physics Lab', credits: 1, semester: 2 },
-      { code: 'CSE2001', name: 'Data Structures and Algorithms', credits: 4, semester: 2 },
-      { code: 'CSE2002', name: 'Digital Logic Design', credits: 3, semester: 2 },
-      { code: 'ENG2001', name: 'Professional Communication', credits: 2, semester: 2 },
-      { code: 'MAT2002', name: 'Discrete Mathematics', credits: 3, semester: 2 },
-      { code: 'CSE2003', name: 'Computer Organization', credits: 3, semester: 2 },
-      { code: 'GEN2001', name: 'Environmental Science', credits: 2, semester: 2 }
+      { courseCode: 'MAT2001', courseName: 'Linear Algebra and Calculus', credits: 4, semester: 2 },
+      { courseCode: 'PHY2001', courseName: 'Engineering Physics Lab', credits: 1, semester: 2 },
+      { courseCode: 'CSE2001', courseName: 'Data Structures and Algorithms', credits: 4, semester: 2 },
+      { courseCode: 'CSE2002', courseName: 'Digital Logic Design', credits: 3, semester: 2 },
+      { courseCode: 'ENG2001', courseName: 'Professional Communication', credits: 2, semester: 2 },
+      { courseCode: 'MAT2002', courseName: 'Discrete Mathematics', credits: 3, semester: 2 },
+      { courseCode: 'CSE2003', courseName: 'Computer Organization', credits: 3, semester: 2 },
+      { courseCode: 'GEN2001', courseName: 'Environmental Science', credits: 2, semester: 2 }
     ];
 
     // Fall Semester Courses (Semester 3)
     const fallCourses = [
-      { code: 'CSE3001', name: 'Object Oriented Programming', credits: 4, semester: 3 },
-      { code: 'CSE3002', name: 'Database Management Systems', credits: 4, semester: 3 },
-      { code: 'CSE3003', name: 'Computer Networks', credits: 3, semester: 3 },
-      { code: 'MAT3001', name: 'Probability and Statistics', credits: 3, semester: 3 },
-      { code: 'CSE3004', name: 'Operating Systems', credits: 4, semester: 3 },
-      { code: 'CSE3005', name: 'Software Engineering', credits: 3, semester: 3 },
-      { code: 'GEN3001', name: 'Indian Constitution', credits: 1, semester: 3 },
-      { code: 'CSE3006', name: 'Web Technologies', credits: 3, semester: 3 }
+      { courseCode: 'CSE3001', courseName: 'Object Oriented Programming', credits: 4, semester: 3 },
+      { courseCode: 'CSE3002', courseName: 'Database Management Systems', credits: 4, semester: 3 },
+      { courseCode: 'CSE3003', courseName: 'Computer Networks', credits: 3, semester: 3 },
+      { courseCode: 'MAT3001', courseName: 'Probability and Statistics', credits: 3, semester: 3 },
+      { courseCode: 'CSE3004', courseName: 'Operating Systems', credits: 4, semester: 3 },
+      { courseCode: 'CSE3005', courseName: 'Software Engineering', credits: 3, semester: 3 },
+      { courseCode: 'GEN3001', courseName: 'Indian Constitution', credits: 1, semester: 3 },
+      { courseCode: 'CSE3006', courseName: 'Web Technologies', credits: 3, semester: 3 }
     ];
 
     // Create all courses
@@ -117,7 +117,7 @@ const seedAcademicData = async () => {
         isActive: true
       });
       const savedCourse = await course.save();
-      createdCourses[courseData.code] = savedCourse;
+      createdCourses[courseData.courseCode] = savedCourse;
     }
 
     console.log('📊 Creating academic results...');
