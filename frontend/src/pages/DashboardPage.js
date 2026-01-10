@@ -5,14 +5,18 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNotification } from '../contexts/NotificationContext';
 import {
   AcademicCapIcon,
+  ClipboardDocumentCheckIcon,
   ChartBarIcon,
   CalendarDaysIcon,
   SpeakerWaveIcon,
   BookOpenIcon,
+  ClockIcon,
   ArrowRightIcon,
   BellIcon,
+  UserGroupIcon,
   DocumentArrowUpIcon,
   PlusIcon,
+  EyeIcon,
   PencilSquareIcon,
   TrophyIcon
 } from '@heroicons/react/24/outline';
