@@ -66,104 +66,6 @@ const userSchema = new mongoose.Schema({
     }
   },
   
-  // Additional personal information fields
-  firstName: {
-    type: String,
-    trim: true,
-    maxlength: [50, 'First name cannot exceed 50 characters']
-  },
-  
-  middleName: {
-    type: String,
-    trim: true,
-    maxlength: [50, 'Middle name cannot exceed 50 characters']
-  },
-  
-  lastName: {
-    type: String,
-    trim: true,
-    maxlength: [50, 'Last name cannot exceed 50 characters']
-  },
-  
-  phone: {
-    type: String,
-    trim: true,
-    validate: {
-      validator: function(v) {
-        if (!v) return true; // Optional field
-        // Remove all spaces and special characters except +
-        const cleanPhone = v.replace(/[\s\-\(\)]/g, '');
-        // Check various Indian phone number formats
-        return /^(\+91|91)?[6-9]\d{9}$/.test(cleanPhone);
-      },
-      message: 'Please provide a valid Indian phone number (e.g., +91 9876543210 or 9876543210)'
-    }
-  },
-  
-  dateOfBirth: {
-    type: Date,
-    validate: {
-      validator: function(v) {
-        if (!v) return true; // Optional field
-        const today = new Date();
-        const age = today.getFullYear() - v.getFullYear();
-        return age >= 16 && age <= 100; // Reasonable age range
-      },
-      message: 'Date of birth must indicate age between 16 and 100 years'
-    }
-  },
-  
-  gender: {
-    type: String,
-    enum: {
-      values: ['Male', 'Female', 'Other', 'Prefer not to say'],
-      message: 'Gender must be Male, Female, Other, or Prefer not to say'
-    }
-  },
-  
-  // Academic information fields
-  department: {
-    type: String,
-    trim: true,
-    maxlength: [200, 'Department name cannot exceed 200 characters']
-  },
-  
-  program: {
-    type: String,
-    trim: true,
-    maxlength: [100, 'Program name cannot exceed 100 characters']
-  },
-  
-  batch: {
-    type: String,
-    trim: true,
-    match: [
-      /^20\d{2}$/,
-      'Batch must be a 4-digit year (e.g., 2024)'
-    ]
-  },
-  
-  semester: {
-    type: Number,
-    min: [1, 'Semester must be at least 1'],
-    max: [8, 'Semester cannot exceed 8']
-  },
-  
-  academicYear: {
-    type: String,
-    trim: true,
-    match: [
-      /^20\d{2}-\d{2}$/,
-      'Academic year must be in format YYYY-YY (e.g., 2024-25)'
-    ]
-  },
-  
-  // Profile completion status
-  profileCompleted: {
-    type: Boolean,
-    default: false
-  },
-  
   // Account status fields
   isActive: {
     type: Boolean,
@@ -173,17 +75,6 @@ const userSchema = new mongoose.Schema({
   isVerified: {
     type: Boolean,
     default: false
-  },
-  
-  lastUpdated: {
-    type: Date,
-    default: Date.now
-  },
-  
-  // Created at field (automatically managed by timestamps)
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 }, {
   // Enable automatic timestamps
@@ -191,7 +82,7 @@ const userSchema = new mongoose.Schema({
   
   // JSON transform to remove sensitive data
   toJSON: {
-    transform: function(doc, ret) {
+    transform: function(ret) {
       delete ret.password;
       delete ret.__v;
       return ret;
@@ -199,14 +90,11 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Indexes for better performance (removed duplicates since unique: true creates indexes)
+// Indexes for better performance
+userSchema.index({ email: 1 });
+userSchema.index({ registrationNumber: 1 });
 userSchema.index({ role: 1 });
 userSchema.index({ createdAt: -1 });
-
-// Virtual for getting user's display name
-userSchema.virtual('displayName').get(function() {
-  return this.name;
-});
 
 // Pre-save middleware to hash password
 userSchema.pre('save', async function(next) {
@@ -271,23 +159,6 @@ userSchema.statics.parseRegistrationNumber = function(registrationNumber) {
     fullBatch: `20${batch}-${parseInt(batch) + 4}` // e.g., 2022-2026
   };
 };
-
-// Pre-validate middleware for registration number
-userSchema.pre('validate', function(next) {
-  // Auto-generate registration number for students if not provided
-  if (this.role === 'student' && !this.registrationNumber) {
-    const currentYear = new Date().getFullYear();
-    // Extract department from email or use default
-    const emailParts = this.email.split('@')[0];
-    const department = emailParts.includes('cse') ? 'CSE' : 
-                     emailParts.includes('ece') ? 'ECE' : 
-                     emailParts.includes('mech') ? 'MEC' : 'GEN';
-    
-    this.registrationNumber = this.constructor.generateRegistrationNumber(currentYear, department);
-  }
-  
-  next();
-});
 
 // Export the model
 module.exports = mongoose.model('SimpleUser', userSchema);

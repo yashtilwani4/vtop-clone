@@ -8,6 +8,7 @@ const updateWinterSemester = require('../scripts/updateWinterSemester');
 const updateFallSemester = require('../scripts/updateFallSemester');
 const updateStudentProfile = require('../scripts/updateStudentProfile');
 const updateBasicProfile = require('../scripts/updateBasicProfile');
+const { createStudentProfile } = require('../scripts/createStudentProfile');
 
 // Temporary endpoint to seed production database with academic data only
 router.post('/seed-production', async (req, res) => {
@@ -225,6 +226,42 @@ router.post('/update-student-profile', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to update student profile',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Create student profile with complete personal information (safer approach)
+router.post('/create-student-profile', async (req, res) => {
+  try {
+    console.log('👤 Starting student profile creation...');
+    
+    // Check if this is production environment
+    if (process.env.NODE_ENV !== 'production') {
+      return res.status(403).json({
+        success: false,
+        message: 'This endpoint is only available in production'
+      });
+    }
+    
+    // Run the student profile creation script
+    await createStudentProfile();
+    
+    console.log('✅ Student profile created successfully');
+    
+    res.json({
+      success: true,
+      message: 'Student profile created successfully with complete information',
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('❌ Error creating student profile:', error);
+    
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create student profile',
       error: error.message,
       timestamp: new Date().toISOString()
     });
