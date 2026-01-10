@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/Layout/DashboardLayout';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotification } from '../contexts/NotificationContext';
+import { apiGet } from '../utils/api';
 import {
   ChartBarIcon,
   AcademicCapIcon,
@@ -43,37 +44,22 @@ const ResultsPage = () => {
         setLoading(true);
         
         // Fetch student's results
-        const url = selectedSemester === 'all' 
-          ? '/api/simple-results/my-results'
-          : `/api/simple-results/my-results?semester=${selectedSemester}`;
+        const endpoint = selectedSemester === 'all' 
+          ? '/simple-results/my-results'
+          : `/simple-results/my-results?semester=${selectedSemester}`;
           
-        const response = await fetch(url, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        console.log('Fetching results from:', endpoint);
+        const data = await apiGet(endpoint);
+        console.log('API Response:', data); // Debug log
         
-        if (response.ok) {
-          const data = await response.json();
-          console.log('API Response:', data); // Debug log
-          setResultsData(data.data.allResults || []);
-          setGpaData({
-            currentGPA: data.data.cgpa?.cgpa || 0,
-            totalCredits: data.data.cgpa?.totalCredits || 0,
-            averageMarks: data.data.allResults ? 
-              Math.round(data.data.allResults.reduce((sum, r) => sum + r.totalMarks, 0) / data.data.allResults.length) : 0,
-            completedCourses: data.data.allResults?.length || 0
-          });
-        } else {
-          console.error('Failed to fetch results');
-          setResultsData([]);
-          setGpaData({
-            currentGPA: 0,
-            totalCredits: 0,
-            averageMarks: 0,
-            completedCourses: 0
-          });
-        }
+        setResultsData(data.data.allResults || []);
+        setGpaData({
+          currentGPA: data.data.cgpa?.cgpa || 0,
+          totalCredits: data.data.cgpa?.totalCredits || 0,
+          averageMarks: data.data.allResults ? 
+            Math.round(data.data.allResults.reduce((sum, r) => sum + r.totalMarks, 0) / data.data.allResults.length) : 0,
+          completedCourses: data.data.allResults?.length || 0
+        });
       } catch (error) {
         console.error('Error fetching results:', error);
         setResultsData([]);

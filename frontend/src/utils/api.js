@@ -1,47 +1,89 @@
-import axios from 'axios';
+// API utility functions
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://vtop-bhopal.onrender.com/api';
 
-// Create axios instance
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || '/api',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+/**
+ * Make an authenticated API request
+ * @param {string} endpoint - API endpoint (without /api prefix)
+ * @param {object} options - Fetch options
+ * @returns {Promise} - Fetch response
+ */
+export const apiRequest = async (endpoint, options = {}) => {
+  const token = localStorage.getItem('token');
+  
+  const defaultOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` }),
+      ...options.headers
+    }
+  };
+
+  const url = `${API_BASE_URL}${endpoint}`;
+  
+  try {
+    const response = await fetch(url, {
+      ...defaultOptions,
+      ...options
+    });
+    
+    return response;
+  } catch (error) {
+    console.error('API Request Error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Make an authenticated API request and return JSON
+ * @param {string} endpoint - API endpoint (without /api prefix)
+ * @param {object} options - Fetch options
+ * @returns {Promise} - JSON response
+ */
+export const apiRequestJSON = async (endpoint, options = {}) => {
+  const response = await apiRequest(endpoint, options);
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'API request failed');
+  }
+  
+  return data;
+};
+
+/**
+ * GET request helper
+ */
+export const apiGet = (endpoint) => apiRequestJSON(endpoint);
+
+/**
+ * POST request helper
+ */
+export const apiPost = (endpoint, body) => apiRequestJSON(endpoint, {
+  method: 'POST',
+  body: JSON.stringify(body)
 });
 
-// Request interceptor
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+/**
+ * PUT request helper
+ */
+export const apiPut = (endpoint, body) => apiRequestJSON(endpoint, {
+  method: 'PUT',
+  body: JSON.stringify(body)
+});
 
-// Response interceptor
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('token');
-      delete api.defaults.headers.common['Authorization'];
-      
-      // Redirect to login if not already there
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
-    }
-    
-    return Promise.reject(error);
-  }
-);
+/**
+ * DELETE request helper
+ */
+export const apiDelete = (endpoint) => apiRequestJSON(endpoint, {
+  method: 'DELETE'
+});
 
-export default api;
+export default {
+  apiRequest,
+  apiRequestJSON,
+  apiGet,
+  apiPost,
+  apiPut,
+  apiDelete,
+  API_BASE_URL
+};

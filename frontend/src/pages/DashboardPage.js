@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/Layout/DashboardLayout';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotification } from '../contexts/NotificationContext';
+import { apiGet } from '../utils/api';
 import {
   AcademicCapIcon,
   ClipboardDocumentCheckIcon,
@@ -61,31 +62,16 @@ const DashboardPage = () => {
         if (user?.role === 'student') {
           // Fetch student's academic data
           try {
-            const response = await fetch('/api/simple-results/my-results', {
-              headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
-            });
+            console.log('Fetching student data from API...');
+            const data = await apiGet('/simple-results/my-results');
+            console.log('Dashboard API Response:', data);
             
-            if (response.ok) {
-              const data = await response.json();
-              console.log('Dashboard API Response:', data);
-              
-              setStudentData({
-                registeredCourses: data.data.totalResults || 0,
-                cgpa: data.data.cgpa?.cgpa || 0,
-                upcomingClasses: [],
-                recentNotices: []
-              });
-            } else {
-              // Set empty data if API fails
-              setStudentData({
-                registeredCourses: 0,
-                cgpa: 0,
-                upcomingClasses: [],
-                recentNotices: []
-              });
-            }
+            setStudentData({
+              registeredCourses: data.data.totalResults || 0,
+              cgpa: data.data.cgpa?.cgpa || 0,
+              upcomingClasses: [],
+              recentNotices: []
+            });
           } catch (error) {
             console.error('Error fetching student data:', error);
             setStudentData({

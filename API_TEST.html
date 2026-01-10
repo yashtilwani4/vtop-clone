@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - VTOP Backend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .button.primary {
+            background: #2196F3;
+        }
+        .button.primary:hover {
+            background: #1976D2;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .loading {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .credentials {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 VTOP API Test Suite</h1>
+        
+        <div class="credentials">
+            <strong>Test Credentials:</strong><br>
+            📧 Email: neha.24bcy10007@vitbhopal.ac.in<br>
+            🔑 Password: nehababel@2026<br>
+            🆔 Registration: 24BCY10007
+        </div>
+        
+        <div class="section">
+            <h2>🔐 Step 1: Authentication</h2>
+            <button class="button primary" onclick="testLogin()">Login & Get Token</button>
+            <div id="loginResult"></div>
+        </div>
+        
+        <div class="section">
+            <h2>📊 Step 2: Check Database</h2>
+            <button class="button" onclick="checkCourses()">Check Courses</button>
+            <button class="button" onclick="checkResults()">Check Results</button>
+            <button class="button" onclick="checkMyResults()">My Results API</button>
+            <div id="dataResult"></div>
+        </div>
+        
+        <div class="section">
+            <h2>🌱 Step 3: Seed Data (if needed)</h2>
+            <button class="button" onclick="seedData()">Seed Production Database</button>
+            <div id="seedResult"></div>
+        </div>
+        
+        <div class="section">
+            <h2>🎯 Step 4: Test Dashboard API</h2>
+            <button class="button" onclick="testDashboardAPI()">Test Dashboard Data</button>
+            <div id="dashboardResult"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://vtop-bhopal.onrender.com/api';
+        let authToken = localStorage.getItem('vtop_test_token');
+        
+        function showResult(elementId, message, type = 'info') {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.className = `result ${type}`;
+            resultDiv.textContent = message;
+        }
+        
+        async function testLogin() {
+            showResult('loginResult', 'Logging in...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/simple-auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'neha.24bcy10007@vitbhopal.ac.in',
+                        password: 'nehababel@2026'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    authToken = data.token;
+                    localStorage.setItem('vtop_test_token', authToken);
+                    
+                    showResult('loginResult', `✅ LOGIN SUCCESS!
+                    
+Token: ${authToken.substring(0, 50)}...
+User: ${data.user.name}
+Role: ${data.user.role}
+Registration: ${data.user.registrationNumber}
+
+✅ Token saved for API tests!`, 'success');
+                } else {
+                    showResult('loginResult', `❌ LOGIN FAILED: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('loginResult', `❌ LOGIN ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        async function checkCourses() {
+            if (!authToken) {
+                showResult('dataResult', '❌ Please login first!', 'error');
+                return;
+            }
+            
+            showResult('dataResult', 'Checking courses...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/simple-courses`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('dataResult', `✅ COURSES FOUND: ${data.data.length}
+
+${data.data.slice(0, 5).map(course => 
+`📚 ${course.courseCode}: ${course.courseName}
+   Credits: ${course.credits}
+   Students: ${course.studentsEnrolled?.length || 0}`
+).join('\n\n')}
+
+${data.data.length > 5 ? `\n... and ${data.data.length - 5} more courses` : ''}`, 'success');
+                } else {
+                    showResult('dataResult', `❌ COURSES ERROR: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('dataResult', `❌ COURSES ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        async function checkResults() {
+            if (!authToken) {
+                showResult('dataResult', '❌ Please login first!', 'error');
+                return;
+            }
+            
+            showResult('dataResult', 'Checking results...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/simple-results/my-results`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const results = data.data.allResults || [];
+                    const cgpa = data.data.cgpa?.cgpa || 0;
+                    
+                    showResult('dataResult', `✅ RESULTS FOUND: ${results.length}
+
+🎯 CGPA: ${cgpa}
+📊 Total Credits: ${data.data.cgpa?.totalCredits || 0}
+
+📋 Sample Results:
+${results.slice(0, 5).map(result => 
+`${result.courseCode}: Grade ${result.grade} (${result.gradePoints} pts)
+   Marks: ${result.totalMarks}, Semester: ${result.semester}`
+).join('\n')}
+
+${results.length > 5 ? `\n... and ${results.length - 5} more results` : ''}`, 'success');
+                } else {
+                    showResult('dataResult', `❌ RESULTS ERROR: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('dataResult', `❌ RESULTS ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        async function checkMyResults() {
+            if (!authToken) {
+                showResult('dataResult', '❌ Please login first!', 'error');
+                return;
+            }
+            
+            showResult('dataResult', 'Testing my-results API...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/simple-results/my-results`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                showResult('dataResult', `📡 API Response:
+Status: ${response.status}
+Success: ${data.success}
+
+Full Response:
+${JSON.stringify(data, null, 2)}`, response.ok ? 'success' : 'error');
+            } catch (error) {
+                showResult('dataResult', `❌ API ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        async function seedData() {
+            showResult('seedResult', 'Seeding database...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/seed/seed-production`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('seedResult', `🎉 SEEDING SUCCESS!
+
+✅ Courses Created: ${data.data.coursesCreated}
+✅ Results Created: ${data.data.resultsCreated}
+✅ Student: ${data.data.student.name}
+
+Now test the APIs above!`, 'success');
+                } else {
+                    showResult('seedResult', `❌ SEEDING FAILED: ${data.message}
+                    
+Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showResult('seedResult', `❌ SEEDING ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testDashboardAPI() {
+            if (!authToken) {
+                showResult('dashboardResult', '❌ Please login first!', 'error');
+                return;
+            }
+            
+            showResult('dashboardResult', 'Testing dashboard API...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/simple-results/my-results`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    const cgpa = data.data.cgpa?.cgpa || 0;
+                    const totalResults = data.data.totalResults || 0;
+                    
+                    showResult('dashboardResult', `✅ DASHBOARD API WORKING!
+
+🎯 CGPA: ${cgpa}
+📚 Total Courses: ${totalResults}
+📊 Total Credits: ${data.data.cgpa?.totalCredits || 0}
+
+This data should appear on your dashboard!
+
+🔗 Go to: https://vtopbhopal.netlify.app
+🔄 Hard refresh (Ctrl+F5) if needed`, 'success');
+                } else {
+                    showResult('dashboardResult', `❌ DASHBOARD API FAILED: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('dashboardResult', `❌ DASHBOARD API ERROR: ${error.message}`, 'error');
+            }
+        }
+        
+        // Auto-login if we have a token
+        window.onload = function() {
+            if (authToken) {
+                showResult('loginResult', `✅ Found saved token: ${authToken.substring(0, 50)}...
+                
+Ready to test APIs!`, 'info');
+            }
+        };
+    </script>
+</body>
+</html>
