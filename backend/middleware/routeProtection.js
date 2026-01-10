@@ -106,7 +106,8 @@ const applyRouteProtection = (app) => {
       '/seed/update-interim-semester',
       '/seed/update-winter-semester',
       '/seed/update-fall-semester',
-      '/seed/update-student-profile'
+      '/seed/update-student-profile',
+      '/seed/update-basic-profile'
     ];
     
     console.log('Route protection check:', req.method, req.path);

@@ -7,6 +7,7 @@ const updateInterimSemester = require('../scripts/updateInterimSemester');
 const updateWinterSemester = require('../scripts/updateWinterSemester');
 const updateFallSemester = require('../scripts/updateFallSemester');
 const updateStudentProfile = require('../scripts/updateStudentProfile');
+const updateBasicProfile = require('../scripts/updateBasicProfile');
 
 // Temporary endpoint to seed production database with academic data only
 router.post('/seed-production', async (req, res) => {
@@ -150,6 +151,43 @@ router.post('/update-fall-semester', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to update Fall Semester',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Update student profile with basic information (safer version)
+router.post('/update-basic-profile', async (req, res) => {
+  try {
+    console.log('👤 Starting basic profile update...');
+    
+    // Check if this is production environment
+    if (process.env.NODE_ENV !== 'production') {
+      return res.status(403).json({
+        success: false,
+        message: 'This endpoint is only available in production'
+      });
+    }
+    
+    // Run the basic profile update script
+    const result = await updateBasicProfile();
+    
+    console.log('✅ Basic profile updated successfully');
+    
+    res.json({
+      success: true,
+      message: 'Basic student profile updated successfully',
+      timestamp: new Date().toISOString(),
+      data: result.data
+    });
+    
+  } catch (error) {
+    console.error('❌ Error updating basic profile:', error);
+    
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update basic profile',
       error: error.message,
       timestamp: new Date().toISOString()
     });
