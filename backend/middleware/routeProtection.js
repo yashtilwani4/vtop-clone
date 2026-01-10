@@ -102,7 +102,11 @@ const applyRouteProtection = (app) => {
       '/simple-auth/reset-status',
       '/health',
       '/seed/seed-status',
-      '/seed/seed-production'
+      '/seed/seed-production',
+      '/seed/update-interim-semester',
+      '/seed/update-winter-semester',
+      '/seed/update-fall-semester',
+      '/seed/update-student-profile'
     ];
     
     console.log('Route protection check:', req.method, req.path);
